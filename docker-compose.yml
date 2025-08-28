@@ -1,0 +1,28 @@
+services:
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    command: poetry run python tracker/main.py
+    depends_on:
+      - postgres
+    networks:
+      - app_network
+
+  postgres:
+    container_name: postgres
+    image: postgres:17.3-alpine
+    restart: unless-stopped
+    env_file: .env
+    networks:
+      - app_network
+    volumes:
+      - tracker:/var/lib/postgresql/data/
+
+volumes:
+  tracker:
+
+networks:
+  app_network:
